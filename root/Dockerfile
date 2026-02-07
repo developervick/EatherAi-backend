@@ -21,9 +21,9 @@ RUN apt-get update && apt-get install -y \
     make \
     && rm -rf /var/lib/apt/lists/*
 
-# Create and activate virtual environment
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# # Create and activate virtual environment
+# RUN python -m venv /opt/venv
+# ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Python dependencies
 COPY requirements.txt /tmp/requirements.txt
@@ -56,7 +56,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Copy virtual environment from builder stage
-COPY --from=builder /opt/venv /opt/venv
+# COPY --from=builder /opt/venv /opt/venv
 
 # Create app directory
 WORKDIR /app

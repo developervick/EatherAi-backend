@@ -41,6 +41,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     # Railway specific
     PORT=8000
 
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r /tmp/requirements.txt
+
 # Create non-root user for security
 RUN groupadd -r django && useradd -r -g django django
 

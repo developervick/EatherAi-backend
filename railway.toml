@@ -1,0 +1,25 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./Dockerfile"
+
+[deploy]
+startCommand = "gunicorn yourproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --threads 2 --timeout 120 --access-logfile - --error-logfile - --capture-output"
+
+# Health check configuration
+healthcheckPath = "/health/"
+healthcheckTimeout = 30
+
+[variables]
+PORT = "8000"
+DJANGO_SETTINGS_MODULE = "yourproject.settings"
+PYTHONUNBUFFERED = "1"
+PYTHONDONTWRITEBYTECODE = "1"
+RUN_MIGRATIONS = "true"
+COLLECT_STATIC = "true"
+DEBUG = "false"
+
+# Security - set these in Railway dashboard, not here
+# SECRET_KEY = "your-secret-key"
+# ALLOWED_HOSTS = "your-app.up.railway.app"
+# CSRF_TRUSTED_ORIGINS = "https://your-app.up.railway.app"
+# DATABASE_URL = "postgresql://..."

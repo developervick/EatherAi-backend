@@ -1,7 +1,7 @@
 env/
 
-**/*/migrations
 **/*/__pycache__
 /root/*.sqlite3
 *.sqlite3
 
+.vscode

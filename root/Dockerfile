@@ -42,7 +42,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000
 
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r /tmp/requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
 # Create non-root user for security
 RUN groupadd -r django && useradd -r -g django django

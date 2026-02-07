@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'railway'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'xXkxPzFCGTtwsfYUuSarBeMljdoOpqec'),
+        'HOST': os.getenv('RAILWAY_PRIVATE_DOMAIN'),  # Use private domain for internal connections
+        'PORT': os.getenv('PGPORT', '5432'),
     }
 }
 

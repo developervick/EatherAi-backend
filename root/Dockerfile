@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # # Create and activate virtual environment
-# RUN python -m venv /opt/venv
-# ENV PATH="/opt/venv/bin:$PATH"
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Python dependencies
 COPY requirements.txt /tmp/requirements.txt
@@ -41,8 +41,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     # Railway specific
     PORT=8000
 
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
 
 # Create non-root user for security
 RUN groupadd -r django && useradd -r -g django django

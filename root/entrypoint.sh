@@ -3,8 +3,8 @@ set -e
 
 echo "Starting Django application..."
 
-# # Activate virtual environment
-# export PATH="/opt/venv/bin:$PATH"
+# Activate virtual environment
+export PATH="/opt/venv/bin:$PATH"
 
 # Check if we need to wait for database
 if [ -n "${DATABASE_HOST}" ] && [ -n "${DATABASE_PORT}" ]; then

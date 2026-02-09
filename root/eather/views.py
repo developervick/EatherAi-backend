@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from eather.models import *
 import re
 from django.db import IntegrityError
-from django.db.models import Count, Avg
+from django.db.models import Avg, Case, When, IntegerField, Count
 
 
 class EmployeeListView(APIView):
@@ -69,6 +69,9 @@ class EmployeeDetailView(APIView):
             return Response({'employee': data})
         except Employee.DoesNotExist:
             return Response({'error': 'Employee not found'}, status=404)
+        except Exception as e:
+            print(e)
+            return Response({"error":"Something went wrong"})
         
     
 
@@ -104,6 +107,7 @@ class EmployeeDetailView(APIView):
                 return Response({'error': 'Employee not found'}, status=404)
         
         except Exception as e:
+            print(e)
             return Response({'error': str(e)}, status=500)
     
 
@@ -137,6 +141,7 @@ class AttendanceListView(APIView):
             return Response({'attendance_records': attendance_records, 'total_count': count})
         
         except Exception as e:
+            print(e)
             return Response({'error': str(e)}, status=500)
         
     def post(self, request, employee_id):
@@ -163,6 +168,7 @@ class AttendanceListView(APIView):
             return Response({'attendance': data}, status=201)
         
         except Exception as e:
+            print(e)
             return Response({'error': str(e)}, status=500)
     
     def put(self, request, id):
@@ -181,6 +187,7 @@ class AttendanceListView(APIView):
             return Response({'error': 'Attendance record not found'}, status=404)
         
         except Exception as e:
+            print(e)
             return Response({'error': "Something went wrong"}, status=500)
         
 
@@ -193,6 +200,7 @@ class AttendanceListView(APIView):
             return Response({'error': 'Attendance record not found'}, status=404)
         
         except Exception as e:
+            print(e)
             return Response({'error': "Something went wrong"}, status=500)
 
 
@@ -205,6 +213,7 @@ class DepartmentView(APIView):
             return Response({'departments': departments})
         
         except Exception as e:
+            print(e)
             return Response({'error': "Something went wrong"}, status=500)
     
     def post(self, request):
@@ -225,6 +234,7 @@ class DepartmentView(APIView):
             return Response({'department': data}, status=201)
         
         except Exception as e:
+            print(e)
             return Response({'error': "Something went wrong"}, status=500)
     
     def delete(self, request, id):
@@ -236,6 +246,7 @@ class DepartmentView(APIView):
             return Response({'error': 'Department not found'}, status=404)
         
         except Exception as e:
+            print(e)
             return Response({'error': "Something went wrong"}, status=500)
         
 
@@ -247,6 +258,7 @@ class AttendanceStatisticsView(APIView):
             return Response({'statistics': statistics})
         
         except Exception as e:
+            print(e)
             return Response({'error': "Something went wrong"}, status=500)
         
 
@@ -259,7 +271,22 @@ class StatisticsView(APIView):
             total_employees = Employee.objects.filter(deleted_at__isnull=True).count()
             total_departments = Department.objects.filter(deleted_at__isnull=True).count()
             total_attendance_records = Attendance.objects.filter(deleted_at__isnull=True).count()
-            avg_attendance_per_employee = Attendance.objects.filter(deleted_at__isnull=True).values('employee').annotate(avg_attendance=Avg('status')).aggregate(average=Avg('avg_attendance'))['average']
+            avg_attendance_per_employee = avg_attendance_per_employee = (
+                    Attendance.objects
+                    .filter(deleted_at__isnull=True)
+                    .values("employee")
+                    .annotate(
+                        avg_attendance=Avg(
+                            Case(
+                                When(status=True, then=1),
+                                When(status=False, then=0),
+                                output_field=IntegerField(),
+                            )
+                        )
+                    )
+                    .aggregate(average=Avg("avg_attendance"))
+                )["average"]
+            
             data.update({
                 'total_employees': total_employees,
                 'total_departments': total_departments,
@@ -269,4 +296,5 @@ class StatisticsView(APIView):
             return Response(data)
         
         except Exception as e:
+            
             return Response({'error': "Something went wrong"}, status=500)

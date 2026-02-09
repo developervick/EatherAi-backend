@@ -53,7 +53,8 @@ env\Scripts\activate
 
 ### 4. Install dependencies in env
 ```bash
-cd root pip install -r requirements.txt
+cd root
+pip install -r requirements.txt
 cd ..
 ```
 

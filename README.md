@@ -106,7 +106,7 @@ Follow the setup instructions from the frontend repository: (Link)[https://]
 
 
 # 2. Project Structure
-root/
+```root/
     ├── core/
     │ ├── asgi.py
     │ ├── settings.py
@@ -129,6 +129,7 @@ root/
 docker-compose.local.yaml
 .dockerignore
 .gitignore
+```
 
 
 ---

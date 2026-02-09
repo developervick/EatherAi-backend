@@ -73,27 +73,9 @@ fi
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     echo "=== Running migrations ==="
     python manage.py migrate --noinput || echo "Migrations failed, continuing..."
+    echo "====== Migrations applied ========="
 fi
 
-# Create superuser (optional, for development)
-if [ -n "${DJANGO_SUPERUSER_USERNAME}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD}" ] && [ -n "${DJANGO_SUPERUSER_EMAIL}" ]; then
-    echo "=== Creating superuser ==="
-    python manage.py shell -c "
-from django.contrib.auth import get_user_model;
-User = get_user_model();
-if not User.objects.filter(username='${DJANGO_SUPERUSER_USERNAME}').exists():
-    User.objects.create_superuser('${DJANGO_SUPERUSER_USERNAME}', '${DJANGO_SUPERUSER_EMAIL}', '${DJANGO_SUPERUSER_PASSWORD}')
-    print('✓ Superuser created')
-else:
-    print('✓ Superuser already exists')
-" || echo "Superuser creation failed"
-fi
-
-# Collect static files
-if [ "${COLLECT_STATIC:-true}" = "true" ]; then
-    echo "=== Collecting static files ==="
-    python manage.py collectstatic --noinput --clear || echo "Static collection failed, continuing..."
-fi
 
 # Execute the main command
 echo "=== Starting server ==="

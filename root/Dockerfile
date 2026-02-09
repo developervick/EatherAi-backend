@@ -87,4 +87,4 @@ RUN echo "Files in current directory: $(ls -F)"
 # Entrypoint and command
 ENTRYPOINT ["sh", "/app/entrypoint.sh"]
 # CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--chdir", "/app", "--workers", "4", "--threads", "2", "--timeout", "120", "core.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0", "--chdir", "/app", "--workers", "4", "--threads", "2", "--timeout", "120", "core.wsgi:application"]

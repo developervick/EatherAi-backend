@@ -61,7 +61,6 @@ cd ..
 ### 5. Environment Variables Setup
 
 ```bash
-cd root
 touch .env.local
 ```
 
@@ -96,6 +95,7 @@ X_FRAME_OPTIONS='DENY'
 
 ### 6. Run the Application with Docker
 ```bash
+cd ..
 sudo docker compose -f docker-compose.local.yaml up --build
 ```
 

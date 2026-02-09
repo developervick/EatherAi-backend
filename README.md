@@ -101,12 +101,13 @@ sudo docker compose -f docker-compose.local.yaml up --build
 
 ### 7. Frontend Setup
 
-Follow the setup instructions from the frontend repository: (Link)[https://]
+Follow the setup instructions from the frontend repository: [Click for repo](https://github.com/developervick/EatherAI-assignment)
 
 
 
 # 2. Project Structure
-```root/
+```
+root/
     ├── core/
     │ ├── asgi.py
     │ ├── settings.py

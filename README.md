@@ -23,7 +23,13 @@ source env/bin/activate
 env\Scripts\activate
 ```
 
-### 4. Environment Variables Setup
+### 4. Install dependencies in env
+```bash
+cd root pip install -r requirements.txt
+cd ..
+```
+
+### 5. Environment Variables Setup
 
 ```bash
 cd root
@@ -59,12 +65,12 @@ SECURE_BROWSER_XSS_FILTER=True
 X_FRAME_OPTIONS='DENY'
 ```
 
-### 5. Run the Application with Docker
+### 6. Run the Application with Docker
 ```bash
 sudo docker compose -f docker-compose.local.yaml up --build
 ```
 
-### 6. Frontend Setup
+### 7. Frontend Setup
 
 Follow the setup instructions from the frontend repository: (Link)[https://]
 

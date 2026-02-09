@@ -45,11 +45,17 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+
+RUN apt-get update && apt-get install -y netcat-traditional && rm -rf /var/lib/apt/lists/*
+
 # Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
 
 # Set working directory
 WORKDIR /app
+
+RUN echo "Current directory: $(pwd)"
+RUN echo "Files in current directory: $(ls -F)"
 
 # Copy application code
 COPY --chown=django:django . .
@@ -58,48 +64,10 @@ COPY --chown=django:django . .
 RUN mkdir -p staticfiles mediafiles logs && \
     chown -R django:django staticfiles mediafiles logs
 
-# Create entrypoint script
-RUN echo '#!/bin/bash\n\
-set -e\n\
-\n\
-echo "Starting Django application..."\n\
-\n\
-# Check Python and pip\n\
-echo "Python version: $(python --version)"\n\
-echo "Pip version: $(pip --version)"\n\
-\n\
-# List installed packages\n\
-echo "Installed packages:"\n\
-pip list\n\
-\n\
-# Wait for database if needed\n\
-if [ -n "$DATABASE_HOST" ] && [ -n "$DATABASE_PORT" ]; then\n\
-    echo "Waiting for database..."\n\
-    while ! nc -z $DATABASE_HOST $DATABASE_PORT; do\n\
-        sleep 0.5\n\
-    done\n\
-    echo "Database is ready!"\n\
-fi\n\
-\n\
-# Run migrations\n\
-if [ "$RUN_MIGRATIONS" = "true" ]; then\n\
-    echo "Running migrations..."\n\
-    python manage.py migrate --noinput\n\
-fi\n\
-\n\
-# Collect static files\n\
-if [ "$COLLECT_STATIC" = "true" ]; then\n\
-    echo "Collecting static files..."\n\
-    python manage.py collectstatic --noinput --clear\n\
-fi\n\
-\n\
-# Execute the main command\n\
-echo "Starting server with command: $@"\n\
-exec "$@"' > /entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
 
-# Switch to non-root user
 USER django
 
 # Verify Python environment
@@ -114,6 +82,9 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:$PORT/health/ || exit 1
 
+RUN echo "Current directory: $(pwd)"
+RUN echo "Files in current directory: $(ls -F)"
 # Entrypoint and command
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "2", "--timeout", "120", "core.wsgi:application"]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+# CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--chdir", "/app", "--workers", "4", "--threads", "2", "--timeout", "120", "core.wsgi:application"]

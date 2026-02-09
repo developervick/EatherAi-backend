@@ -55,12 +55,6 @@ if [ -n "${DATABASE_HOST}" ] && [ -n "${DATABASE_PORT}" ]; then
     echo "=== Waiting for database ==="
     echo "Database host: ${DATABASE_HOST}:${DATABASE_PORT}"
     
-    # Install netcat if not available
-    if ! command -v nc &> /dev/null; then
-        echo "Installing netcat..."
-        apt-get update && apt-get install -y netcat-traditional
-    fi
-    
     counter=0
     max_attempts=30
     while ! nc -z ${DATABASE_HOST} ${DATABASE_PORT}; do

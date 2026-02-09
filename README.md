@@ -33,7 +33,7 @@ The application is structured to:
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/developervick/EatherAi-backend.git
-cd EatherAi-backend.git
+cd EatherAi-backend
 ```
 
 ### 2. Create Python Virtual Environment

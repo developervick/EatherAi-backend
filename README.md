@@ -61,6 +61,7 @@ cd ..
 ### 5. Environment Variables Setup
 
 ```bash
+cd root
 touch .env.local
 ```
 
